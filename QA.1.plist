@@ -234,10 +234,7 @@
 		</dict>
 		<dict>
 			<key>name</key>
-			<string>Has the candidate itself subtracted correctly?
-Has the candidate itself subtracted correctly?
-Has the candidate itself subtracted correctly?
-Has the candidate itself subtracted correctly?</string>
+			<string>Has the candidate itself subtracted correctly?</string>
 			<key>parent_id</key>
 			<integer>1</integer>
 			<key>task_id</key>
