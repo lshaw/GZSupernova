@@ -22,15 +22,21 @@
 @property (assign) long int idnum;
 @property (copy) NSData * payload;
 
--(id)initWithGalaxy:(GZGalaxy*)galaxy userID:(NSString*)userID apiKey:(NSString*) apiKey;
-+(NSData*) buildClassificationForGalaxy:(GZGalaxy*) galaxy userID:(NSString*) userID apiKey:(NSString*)apiKey;
+-(id)initWithGalaxy:(GZGalaxy*)galaxy 
+			 userID:(NSString*)userID 
+			 apiKey:(NSString*) apiKey;
+
++(NSData*) buildClassificationForGalaxy:(GZGalaxy*) galaxy 
+								 userID:(NSString*) userID 
+								 apiKey:(NSString*)apiKey;
+
 @end
 
 
 //This class should:
-    //have a queue which it periodically tries to upload from when the queue reaches a certain length.
-    //it needs to do this in a separate thread.
-    //have a thread safe add-to-queue method.
+//	* have a queue which it periodically tries to upload from when the queue reaches a certain length.
+//	* it needs to do this in a separate thread.
+//	* have a thread safe add-to-queue method.
 @interface GZUploader : NSObject {
     Queue * queue;
     BOOL shouldUpload;

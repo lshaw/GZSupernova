@@ -16,7 +16,12 @@ extern NSData *    exampleGalaxyImage;
 
 
 
-const char * sekritMessage = "encryption,RSA,AES,encoding: If you are reading this you are trying to disassemble this Galaxy Zoo app.  I'd like to ask you very sincerely not to use the results if you succeed.  Galaxy Zoo is a scientific project that does not make any money and relies on your goodwill. I do know the thrill and sense of intellectual victory that you'd get from outwitting me and cracking the app, and then submitting your own cheat classifications, but I would urge you to not use it if you succeed and instead email me at jaz@astro.ox.ac.uk and gloat over your win directly. Thanks for reading this.";
+const char * sekritMessage = "encryption,RSA,AES,encoding: If you are reading this you are trying to disassemble 
+this Galaxy Zoo app. I'd like to ask you very sincerely not to use the results if you succeed.  Galaxy Zoo is a 
+scientific project that does not make any money and relies on your goodwill. I do know the thrill and sense of 
+intellectual victory that you'd get from outwitting me and cracking the app, and then submitting your own cheat 
+classifications, but I would urge you to not use it if you succeed and instead email me at jaz@astro.ox.ac.uk and 
+gloat over your win directly. Thanks for reading this.";
 
 extern NSData * exampleGalaxyImage;
 extern NSData * exampleDataSet;
@@ -26,7 +31,10 @@ GZDataWrapper * wrapper=nil;
 @implementation GZClassification
 @synthesize idnum;
 @synthesize payload;
--(id)initWithGalaxy:(GZGalaxy*)galaxy userID:(NSString*)userID apiKey:(NSString*) apiKey
+
+-(id)initWithGalaxy:(GZGalaxy*)galaxy 
+			 userID:(NSString*)userID 
+			 apiKey:(NSString*) apiKey
 {
 	self = [super init];
 	if (self){
@@ -38,7 +46,9 @@ GZDataWrapper * wrapper=nil;
 }
 
 
-+(NSData*) buildClassificationForGalaxy:(GZGalaxy*) galaxy userID:(NSString*) userID apiKey:(NSString*)apiKey
++(NSData*) buildClassificationForGalaxy:(GZGalaxy*) galaxy 
+								 userID:(NSString*) userID 
+								 apiKey:(NSString*)apiKey
 {
 
     BOOL ipad = [GZUtils isIpad];
@@ -167,7 +177,7 @@ GZDataWrapper * wrapper=nil;
 
     NSLog(@"Considering upload");
     // If we have been waiting for a timer to launch this function then invalidate it.
-    //Otherwise it should be nil.
+    // Otherwise it should be nil.
     [self.timer invalidate];
 
     if (uploading) {
@@ -184,11 +194,11 @@ GZDataWrapper * wrapper=nil;
     }
     if (n>=self.batchSize){
 //    if (1){
-        NSLog(@"Have %d galaxies: starting upload",n);
+        NSLog(@"Have %d galaxies: starting upload", n);
         [self launchUpload];
     }
     else{
-        NSLog(@"Have %d galaxies: not enough to upload",n);
+        NSLog(@"Have %d galaxies: not enough to upload", n);
         [self restartUploadAfterWait];
     }
 }
@@ -276,7 +286,7 @@ GZDataWrapper * wrapper=nil;
 -(void) restartUploadAfterWait
 {
     double t = [self waitTime];
-    NSLog(@"pausing upload for %lf seconds",t);
+    NSLog(@"pausing upload for %lf seconds", t);
     self.timer = [NSTimer scheduledTimerWithTimeInterval:t target:self selector:@selector(timerFinished) userInfo:nil repeats:NO];
 
 }
@@ -405,7 +415,7 @@ GZDataWrapper * wrapper=nil;
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    //We do not care about the data
+    // We do not care about the data
     // I did not make it so I do not have to release it.  Joe is learning.
 }
 
