@@ -26,12 +26,14 @@
 
 		connectionData = [NSArray arrayWithObjects:[NSMutableData data], [NSMutableData data], [NSMutableData data], nil];
 		[connectionData retain];
-
+		
+		// initial settings for flags
         downloadingJson=NO;
         downloadingImage=NO;
         downloadPaused=NO;
         self.status = DOWNLOADER_STATUS_OK;
         connection=nil;
+		
 		// NEED TO CHANGE THIS URL
         nextAssetURL = @"http://www.galaxyzoo.org/api/assets/next_asset_for_project";
         NSLog(@"Using new nextAssetURL - may not work.");
@@ -46,7 +48,7 @@
 
 -(void) startDownload
 {
-    if (downloadingJson || downloadingImage || downloadPaused) return;
+    if (downloadingJson || downloadingImage || downloadPaused) return; // don't do anything if already downloading
 	downloadingJson=YES;    
 	NSLog(@"Async Download Begun");
     NSString * urlstring = [NSString stringWithString:nextAssetURL];
