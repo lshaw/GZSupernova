@@ -68,22 +68,23 @@ GZDataWrapper * wrapper=nil;
 
     
     //I am a bad person.
-	NSString* xmlBase = @"<?xml version='1.0' encoding='UTF-8'?><classification><zooniverse_user_id type='integer'>%@</zooniverse_user_id><project_id type='integer'>1</project_id><workflow_id type='integer'>1</workflow_id><application_identifier>%@</application_identifier><assets type='array'><asset><id type='integer'>%d</id></asset></assets><annotations type='array'>%@</annotations><started>%@</started><ended>%@</ended></classification>";	
-	NSString* annotationBase = @"<annotation><task_id>%d</task_id><answer_id>%d</answer_id></annotation>";
-
-	NSMutableString* annotations = [[NSMutableString alloc] initWithCapacity:100];
-    exampleDataSet=exampleGalaxyImage;
+	NSString * jsonBase = @"{\"classification\":{\"zooniverse_user_id\":\"%@\",\"project_id\":\"1\",\"workflow_id\":\"1\",\"application_identifier\":\"%@\",\"assets\":[\"asset\":{\"id\":\"%d\"}],\"annotations\":\"%@\",\"started\":\"%@\",\"ended\":\"%@\"}}";
+	NSString * annotationBase = @"{\"annotation\":{\"task_id\":\"%d\",\"answer_id\":\"%d\"}}";
+	
+	NSMutableString *annotations = [[NSMutableString alloc] initWithCapacity:100]; // capacity can probs be smaller
+	exampleDataSet = exampleGalaxyImage;
 	int n = [galaxy numberOfAnswers];
-	for(int i=0;i<n;i++){
-        GZQuestion * question = [[galaxy answeredQuestions] objectAtIndex:i];
-        GZAnswer * answer = [galaxy.givenAnswers objectAtIndex:i];
-		NSString * annotation = [NSString stringWithFormat:annotationBase,question.task_id,answer.answer_id];
+	for (int i=0; i<n; i++) 
+	{
+		GZQuestion * question = [[galaxy answeredQuestions] objectAtIndex:i];
+		GZAnswer * answer = [galaxy.givenAnswers objectAtIndex:i];
+		NSString * annotation = [NSString stringWithFormat:annotationBase, question.task_id, answer.answer_id];
 		[annotations appendString:annotation];
 	}
 	
-	NSString *xml = [NSString stringWithFormat:xmlBase,userID,application_identifier,galaxy.idnum,annotations,start_string,end_string];
-    [annotations release];
-    return [wrapper wrap:xml];
+	NSString * json = [NSString stringWithFormat:jsonBase,userID,application_identifier,galaxy.idnum,annotations,start_string,end_string];
+	[annotations release];
+	return [wrapper wrap:json]; // are we still going to do the wrapping?
 
 
 }
