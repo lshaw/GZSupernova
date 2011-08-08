@@ -20,10 +20,11 @@
 -(id) initWithDelegate:(id) delegate_
 {
 	self = [super init];
-	if (self){
-
-        self.delegate = delegate_;
-
+	if (self)
+	{
+        self.delegate = delegate_; // setting self.delegate as the delegate
+		
+		// connectionData is an array with three NSMutableData objects in it
 		connectionData = [NSArray arrayWithObjects:[NSMutableData data], [NSMutableData data], [NSMutableData data], nil];
 		[connectionData retain];
 		
@@ -49,7 +50,7 @@
 -(void) startDownload
 {
     if (downloadingJson || downloadingImage || downloadPaused) return; // don't do anything if already downloading
-	downloadingJson=YES;    
+	downloadingJson=YES; 
 	NSLog(@"Async Download Begun");
     NSString * urlstring = [NSString stringWithString:nextAssetURL];
 	[self startAsyncDownload:urlstring Json:YES];
@@ -123,11 +124,11 @@
 
 	NSLog(@"Handling Json Download");
     GZJsonSimpleElementFinder * finder = [[GZJsonSimpleElementFinder alloc] initWithData:receivedData];
-	nextGalaxyID=[[finder findContentsOfTag:@"id"] intValue];
+	nextGalaxyID=[[finder findValueForKey:@"id"] intValue];
     NSLog(@"Next galaxy ID = %d",nextGalaxyID);
 	downloadingImage=YES;
 	downloadingJson=NO;
-    NSString * urlstring = [finder findContentsOfTag:@"location"];
+    NSString * urlstring = [finder findValueForKey:@"location"];
     [finder release];
     [connection release];
     connection=nil;
