@@ -37,7 +37,9 @@
 //	* have a queue which it periodically tries to upload from when the queue reaches a certain length.
 //	* it needs to do this in a separate thread.
 //	* have a thread safe add-to-queue method.
-@interface GZUploader : NSObject {
+
+@interface GZUploader : NSObject 
+{
     Queue * queue;
     BOOL shouldUpload;
     int batchSize;
@@ -55,6 +57,7 @@
     BOOL uploading;
     BOOL uploadPaused;
 }
+
 @property (assign) BOOL uploadPaused;
 @property (retain) GZClassification * activeUpload;
 
@@ -72,10 +75,10 @@
 -(void) timerFinished;
 -(void) launchUpload;
 -(void) abortUpload;
--(void) saveClassification:(GZClassification*)classification xmlDir:(NSString*)xmlDir;
--(void) saveClassificationsTo:(NSString*) filename xmlDir:(NSString*) xmlDir;
--(NSData*) loadClassificationFor:(long int)idnum fromDir:(NSString*)xmlDir;
--(void) loadClassificationsFrom:(NSString*)filename xmlDir:(NSString*) xmlDir;
+-(void) saveClassification:(GZClassification*)classification jsonDir:(NSString*)jsonDir;
+-(void) saveClassificationsTo:(NSString*) filename jsonDir:(NSString*) jsonDir;
+-(NSData *) loadClassificationFor:(long int)idnum fromDir:(NSString*)jsonDir;
+-(void) loadClassificationsFrom:(NSString*)filename jsonDir:(NSString*) jsonDir;
 -(void) restartUploadAfterWait;
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response;
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;

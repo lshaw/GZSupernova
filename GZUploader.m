@@ -205,7 +205,6 @@ GZDataWrapper * wrapper=nil;
 }
 
 
-
 -(void) launchUpload
 {        
     exampleDataSet=exampleGalaxyImage;
@@ -234,22 +233,23 @@ GZDataWrapper * wrapper=nil;
 															cachePolicy:NSURLRequestReloadIgnoringCacheData
 														timeoutInterval:60.0];
 	[request setHTTPMethod:@"POST"];
-	[request setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];
-	[request setValue:@"application/xml" forHTTPHeaderField:@"Accept"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+	[request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
 
-    char * header = "<?xml version='1.0' encoding='UTF-8'?><data>";
-    NSMutableData * data = [NSMutableData dataWithBytes:header length:strlen(header)];
+	// CHANGED THIS BIT TO UPLOAD IN JSON INSTEAD - is this what we want?
+	
+   // char * header = "<?xml version='1.0' encoding='UTF-8'?><data>";
+    //NSMutableData * data = [NSMutableData dataWithBytes:header length:strlen(header)];
 
     NSString * payload_string = [GZDataWrapper wrap64bit:self.activeUpload.payload];
     NSData * payload_data = [payload_string dataUsingEncoding:NSASCIIStringEncoding];
-    [data appendData:payload_data];
-    char * footer = "</data>";
-    [data appendBytes:footer length:strlen(footer)];
+    //[data appendData:payload_data];
+	NSMutableData *data = [NSMutableData dataWithBytes:payload_data length:strlen(payload_data)];
+    //char * footer = "</data>";
+    //[data appendBytes:footer length:strlen(footer)];
     
 	[request setHTTPBody:data];
     
-    
-    //NSLog(@"%@",[[[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding] autorelease]);
 	NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request delegate:self];
     
     if (!theConnection){
@@ -304,7 +304,7 @@ GZDataWrapper * wrapper=nil;
 
 
 
--(void) loadClassificationsFrom:(NSString*)filename xmlDir:(NSString*) xmlDir
+-(void) loadClassificationsFrom:(NSString*)filename jsonDir:(NSString*) jsonDir
 {
     NSLog(@"Loading cached queue from %@",filename);
     NSData * data = [NSData dataWithContentsOfFile:filename];
@@ -323,17 +323,17 @@ GZDataWrapper * wrapper=nil;
     for(int i=0;i<n;i++){
         GZClassification * classification = [[GZClassification alloc] init];
         classification.idnum = *(long int*) ptr++;
-        classification.payload = [self loadClassificationFor:classification.idnum fromDir:xmlDir];
+        classification.payload = [self loadClassificationFor:classification.idnum fromDir:jsonDir];
         if (classification.payload) //Queue if we loaded successfully, else skip.
             [queue enqueue:classification];
         [classification release];
     }
 }
 
--(NSData*) loadClassificationFor:(long int)idnum fromDir:(NSString*)xmlDir
+-(NSData*) loadClassificationFor:(long int)idnum fromDir:(NSString*)jsonDir
 {
-    NSString * stringID = [NSString stringWithFormat:@"%ld.xml",idnum];
-    NSString * filename = [NSString pathWithComponents:[NSArray arrayWithObjects:xmlDir,stringID,nil]];
+    NSString * stringID = [NSString stringWithFormat:@"%ld.json",idnum];
+    NSString * filename = [NSString pathWithComponents:[NSArray arrayWithObjects:jsonDir,stringID,nil]];
     NSData * data = [NSData dataWithContentsOfFile:filename];
     if (!data){
         NSLog(@"Could not load classification filename %@",filename);
@@ -349,7 +349,7 @@ GZDataWrapper * wrapper=nil;
     [queue clear];
 }
 
--(void) saveClassificationsTo:(NSString*) filename xmlDir:(NSString*) xmlDir
+-(void) saveClassificationsTo:(NSString*) filename jsonDir:(NSString*) jsonDir
 {
     int n;
     @synchronized(queue){
@@ -379,15 +379,16 @@ GZDataWrapper * wrapper=nil;
 
 }
 
--(void) saveClassification:(GZClassification*)classification xmlDir:(NSString*)xmlDir
+// method changed to save to a JSON directory instead
+-(void) saveClassification:(GZClassification*)classification jsonDir:(NSString*)jsonDir
 {
     NSFileManager * os = [NSFileManager defaultManager];
-    NSString * stringID = [NSString stringWithFormat:@"%ld.xml",classification.idnum];
-    NSString * filename = [NSString pathWithComponents:[NSArray arrayWithObjects:xmlDir,stringID,nil]];
+    NSString * stringID = [NSString stringWithFormat:@"%ld.json",classification.idnum];
+    NSString * filename = [NSString pathWithComponents:[NSArray arrayWithObjects:jsonDir,stringID,nil]];
     NSError * error=nil;
     if ([os fileExistsAtPath:filename]){
         [os removeItemAtPath:filename error:&error];
-        if(error) NSLog(@"Could not remove old classification xml file");
+        if(error) NSLog(@"Could not remove old classification json file");
     }
     BOOL success = [os createFileAtPath:filename contents:classification.payload attributes:nil];
     if (!success)NSLog(@"Could not save classification file");
